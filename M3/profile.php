@@ -21,14 +21,20 @@ $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 
 <?php foreach($users as $user){ ?>
-    <br><?php echo htmlspecialchars($user['username']); ?>
-    <br><?php echo htmlspecialchars($user['first']); ?>
+
+    <br><?php echo "username: " ?>
+    <?php echo htmlspecialchars($user['username']); ?>
+    <br><?php echo "Name: " ?>
+    <?php echo htmlspecialchars($user['first']); ?>
     <?php echo htmlspecialchars($user['last']);?>
-    <br><?php echo htmlspecialchars($user['bio']);?>
+    <br><?php echo "Bio: " ?>
+    <?php echo htmlspecialchars($user['bio']);?>
 
 <?php } ?>
 
 
-<p></p>
+<?php if($_SESSION['id'] === $id){?>
+<br><button onclick = "window.location.href = 'EditProfile.php'">edit your profile</button>
+<?php } ?>
 </body>
 </html>

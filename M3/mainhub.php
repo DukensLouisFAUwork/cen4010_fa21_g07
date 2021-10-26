@@ -19,7 +19,8 @@ echo $_SESSION['id'];
 echo "Session variables are set.";
 $sql = "SELECT id, user_id, caption,img FROM posts ";
 $result = $conn->query($sql);
-$posts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
 
 
 if(isset($_POST["submit"])&& $_POST['randcheck']==$_SESSION['rand']){
@@ -49,17 +50,21 @@ function test($conn){
     }
 }
 ?>
-
-<?php foreach($posts as $post){ ?>
-    <br><a href="profile.php?name=<?php echo $post['user_id'] ?>">user's profile page</a>
-    <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $post['img'] ).'"/>';?>
-    <br><?php echo htmlspecialchars($post['caption']); ?>
-    <br><button onclick = "">1st like</button>
-    <button>2nd like</button>
-    <button>3rd like</button>
-
-
+<?php if ($result->num_rows > 0) {?>
+// output data of each row
+<?php while($row = $result->fetch_assoc()) {?>
+        <br><a href="profile.php?name=<?php echo $row['user_id'] ?>">user's profile page</a>
+        <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        <br><?php echo htmlspecialchars($row['caption']); ?>
+        <br><button onclick = "">1st like</button>
+        <button>2nd like</button>
+        <button>3rd like</button>
+    <?php }?>
+<?php } else {?>
+<?php echo "0 results";?>
 <?php } ?>
+
+
 <form method="post" enctype="multipart/form-data">
     <?php
     $rand=rand();

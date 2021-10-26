@@ -17,20 +17,24 @@ if ($conn->connect_error) {
 <?php
 $sql = "SELECT * FROM users WHERE id = '$id' ";
 $result = $conn->query($sql);
-$users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 
-<?php foreach($users as $user){ ?>
+<?php if ($result->num_rows > 0) {?>
+    // output data of each row
+    <?php while($row = $result->fetch_assoc()) {?>
+        <br><?php echo "username: " ?>
+        <?php echo htmlspecialchars($row['username']); ?>
+        <br><?php echo "Name: " ?>
+        <?php echo htmlspecialchars($row['first']); ?>
+        <?php echo htmlspecialchars($row['last']);?>
+        <br><?php echo "Bio: " ?>
+        <?php echo htmlspecialchars($row['bio']);?>
 
-    <br><?php echo "username: " ?>
-    <?php echo htmlspecialchars($user['username']); ?>
-    <br><?php echo "Name: " ?>
-    <?php echo htmlspecialchars($user['first']); ?>
-    <?php echo htmlspecialchars($user['last']);?>
-    <br><?php echo "Bio: " ?>
-    <?php echo htmlspecialchars($user['bio']);?>
-
+    <?php }?>
+<?php } else {?>
+    <?php echo "0 results";?>
 <?php } ?>
+
 
 
 <?php if($_SESSION['id'] === $id){?>

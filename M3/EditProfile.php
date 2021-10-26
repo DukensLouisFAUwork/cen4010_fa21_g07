@@ -7,7 +7,7 @@ if ($conn->connect_error) {
 }
 $sql = "SELECT first, last, bio, username, password, dob FROM users WHERE id = '$id'";
 $result = $conn->query($sql);
-$userinfo = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 
 if(isset($_POST["submit"])&& $_POST['randcheck']==$_SESSION['rand']){
     echo $_POST['first'];
@@ -27,16 +27,19 @@ if(isset($_POST["submit"])&& $_POST['randcheck']==$_SESSION['rand']){
     }
 }
 ?>
-<?php foreach($userinfo as $user){ ?>
+<?php if ($result->num_rows > 0) {?>
+    <?php while($row = $result->fetch_assoc()) {?>
+        <?php $first =$row['first'] ?>
+        <?php $last =$row['last'] ?>
+        <?php $bio =$row['bio'] ?>
+        <?php $username =$row['username'] ?>
+        <?php $password =$row['password'] ?>
+        <?php $bio =$row['bio'] ?>
+    <?php }?>
+<?php } else {?>
+    <?php echo "0 results";?>
+<?php } ?>
 
-    <?php $first =$user['first'] ?>
-    <?php $last =$user['last'] ?>
-    <?php $bio =$user['bio'] ?>
-    <?php $username =$user['username'] ?>
-    <?php $password =$user['password'] ?>
-    <?php $bio =$user['bio'] ?>
-
-<?php }?>
 
 <!DOCTYPE html>
 <html lang="en">

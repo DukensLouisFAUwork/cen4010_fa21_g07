@@ -52,7 +52,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])
 	else{
 
 		// hashing the password
-        //$pass = md5($pass);
+        $pass = md5($pass);
 
 	    $sql = "SELECT * FROM users WHERE username='$uname' ";
 		$result = mysqli_query($conn, $sql);

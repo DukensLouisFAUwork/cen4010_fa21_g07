@@ -10,21 +10,34 @@ $result = $conn->query($sql);
 
 
 if(isset($_POST["submit"])&& $_POST['randcheck']==$_SESSION['rand']){
-    echo $_POST['first'];
-    echo $_POST['last'];
-    echo $_POST['uname'];
-    echo $_POST['password'];
-    echo $_POST['dob'];
-    $sqlu = "UPDATE users SET first = '$_POST[first]', last = '$_POST[last]', username = '$_POST[uname]', password = '$_POST[password]', bio = '$_POST[bio]' WHERE id = '$id' ";
-    $update = mysqli_query($conn, $sqlu);
-    if($update)
-    {
-        echo '<script type="text/javascript"> alert("Data Inserted Seccessfully!"); </script>';  // alert message
+    $pass = $_POST['password'];
+    $pass = md5($pass);
+    if($_POST['password'] == ""){
+        $sqlu = "UPDATE users SET first = '$_POST[first]', last = '$_POST[last]', username = '$_POST[uname]',bio = '$_POST[bio]' WHERE id = '$id' ";
+        $update = mysqli_query($conn, $sqlu);
+        if($update)
+        {
+            echo '<script type="text/javascript"> alert("Data Inserted Seccessfully!"); </script>';  // alert message
+        }
+        else
+        {
+            echo '<script type="text/javascript"> alert("Error Uploading Data!"); </script>';  // when error occur
+        }
+    }else{
+        $sqlu = "UPDATE users SET first = '$_POST[first]', last = '$_POST[last]', username = '$_POST[uname]', password = '$pass', bio = '$_POST[bio]' WHERE id = '$id' ";
+        $update = mysqli_query($conn, $sqlu);
+        if($update)
+        {
+            echo '<script type="text/javascript"> alert("Data Inserted Seccessfully!"); </script>';  // alert message
+        }
+        else
+        {
+            echo '<script type="text/javascript"> alert("Error Uploading Data!"); </script>';  // when error occur
+        }
+
     }
-    else
-    {
-        echo '<script type="text/javascript"> alert("Error Uploading Data!"); </script>';  // when error occur
-    }
+
+
 }
 ?>
 <?php if ($result->num_rows > 0) {?>
@@ -125,7 +138,7 @@ if(isset($_POST["submit"])&& $_POST['randcheck']==$_SESSION['rand']){
                         </div><br>
                         <div class="col-md-12">
                             <label class="labels">Password </label>
-                            <input type="text" name = "password" class="form-control" placeholder="Password" value="<?php echo $password?>">
+                            <input type="text" name = "password" class="form-control" placeholder="Password">
                         </div><br>
                         <div class="col-md-12">
                             <label class="labels">Bio</label>

@@ -43,23 +43,20 @@ if(isset($_POST["2like"])){
 
 if(isset($_POST["3like"])) {
     $post_id = $_POST['3like'];
-    echo $_SESSION['id'];
     $sql1 = "SELECT caption,img FROM posts WHERE id = $post_id";
     $result = $conn->query($sql1);
     if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
-        echo $row['caption'];
-        echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';
-        $upload = "INSERT INTO posts (user_id,caption,img, like1, like2, like3, like_total) VALUES('$_SESSION[id]','$row[caption]',$row[img],0,0,0,0)";
-        $repost = $conn->query($upload);
-        if ($repost) {
-            echo '<script type="text/javascript"> alert("finally"); </script>';  // when error occur
-        } else {
-            echo '<script type="text/javascript"> alert("Error Uploading Data!"); </script>';
-
-        }
-
-
+        $upload = $conn->prepare("INSERT INTO posts (user_id,caption,img, like1, like2, like3, like_total, username) VALUES(?,?,?,?,?,?,?,?)");
+        $user_id = $_SESSION['id'];
+        $caption = $row['caption'];
+        $img = $row['img'];
+        $like1 = 0;
+        $like2 = 0;
+        $like3 = 0;
+        $like_total = 0;
+        $upload->bind_param("issiiiis",$user_id, $caption, $img, $like1, $like2, $like3, $like_total,$_SESSION['username']);
+        $upload->execute();
     }
 }
 

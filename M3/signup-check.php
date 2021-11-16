@@ -20,6 +20,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])
 
 	$uname = validate($_POST['uname']);
 	$pass = validate($_POST['password']);
+    $last = validate($_POST['last']);
 
 	$re_pass = validate($_POST['re_password']);
 	$first = validate($_POST['first']);
@@ -61,7 +62,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])
 			header("Location: signup.php?error=The username is taken try another&$user_data");
 	        exit();
 		}else {
-           $sql2 = "INSERT INTO users(username, password, first) VALUES('$uname', '$pass', '$first')";
+           $sql2 = "INSERT INTO users(username, password, first, last) VALUES('$uname', '$pass', '$first',$last)";
            $result2 = mysqli_query($conn, $sql2);
            if ($result2) {
            	 header("Location: signup.php?success=Your account has been created successfully");

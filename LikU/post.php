@@ -1,24 +1,35 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
-$id = $_GET['name'];
+$pid = $_GET['name'];
 $conn = new mysqli('localhost', 'root', 'root','cen4010_fa21_g07');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-?>
+$psql = "SELECT user_id, caption,img, username FROM posts WHERE id = '$pid'
+";
+$presult = $conn->query($psql);
+$csql = "SELECT content, username,uid FROM comments WHERE post_id = '$pid'";
+$cresults = $conn->query($csql);
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        h1{
+            font-size: 40px;
+        }
+    </style>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
-<a href="search.php">Search Users</a><br>
 <a href = 'mainhub.php'>Main Hub</a><br>
 <?php
-$sql = "SELECT * FROM users WHERE id = '$id' ";
-$result = $conn->query($sql);
 if(isset($_POST["1like"])){
     $post_id = $_POST['1like'];
     $sql1 = "UPDATE posts SET like1=like1 + 1 WHERE id = '$post_id' ";
@@ -58,44 +69,35 @@ if(isset($_POST["3like"])) {
         $upload->execute();
     }
 }
+if(isset($_POST["comment"])){
+    $content = $_POST['content'];
+    $addComment = $conn->prepare("INSERT INTO comments (post_id, content,username,uid) VALUES(?,?,?,?)");
+    $addComment->bind_param("issi", $pid, $content,$_SESSION['username'],$_SESSION['id']);
+    $addComment->execute();
+}
 
 ?>
-
-<?php if ($result->num_rows > 0) {?>
-    <?php while($row = $result->fetch_assoc()) {?>
-        <?php echo "username: " ?>
-        <?php echo htmlspecialchars($row['username']); ?>
-        <br><?php echo "Name: " ?>
-        <?php echo htmlspecialchars($row['first']); ?>
-        <?php echo htmlspecialchars($row['last']);?>
-        <br><?php echo "Bio: " ?>
-        <?php echo htmlspecialchars($row['bio']);?>
-
-    <?php }?>
-<?php } ?>
-
-
-
-<?php if($_SESSION['id'] === $id){?>
-<br><button onclick = "window.location.href = 'EditProfile.php'">edit your profile</button>
-<?php } ?>
-<?php
-$sql2 = "SELECT * FROM posts WHERE user_id = '$id' ORDER BY id DESC";
-$postresult = $conn->query($sql2);
-
-if ($postresult->num_rows > 0) {?>
-    <?php while($row = $postresult->fetch_assoc()) {?>
-        <br><a href = "post.php?name=<?php echo $row['id']?>">
-            <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
-        </a>
+<?php if ($presult->num_rows > 0) {?>
+    <?php while($row = $presult->fetch_assoc()) {?>
+        <br><a href="profile.php?name=<?php echo $row['user_id'] ?>"><?php echo $row['username']?></a>
+        <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
         <br><?php echo htmlspecialchars($row['caption']); ?>
         <form method = 'post'>
-            <br><button type = 'submit' name ='1like' value = '<?php echo $row['id']?>' >1st like</button>
-            <button>2nd like</button>
-            <button type = 'submit' name = '3like' value = '<?php echo $row['id']?>' >3rd like</button>
+            <br><button type = 'submit' name ='1like' value = '<?php echo $pid?>' >1st like</button>
+            <button type = 'submit' name = '2like' value = '<?php echo $row['user_id']?>' >2nd like</button>
+            <button type = 'submit' name = '3like' value = '<?php echo $pid?>' >3rd like</button>
+            <br><textarea name = 'content'></textarea>
+            <br><button type='submit' name = "comment">Add Comment</button>
+
         </form>
     <?php }?>
 <?php }?>
-
+<h1>Comments</h1>
+<?php if ($cresults->num_rows > 0) {?>
+    <?php while($row = $cresults->fetch_assoc()) {?>
+        <br><a href="profile.php?name=<?php echo $row['uid'] ?>"><?php echo $row['username']?></a><br>
+        <?php echo $row['content']?><br>
+    <?php }?>
+<?php }?>
 </body>
 </html>

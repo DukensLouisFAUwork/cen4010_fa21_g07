@@ -89,7 +89,9 @@ if(isset($_POST["3like"])) {
 <?php if ($result->num_rows > 0) {?>
 <?php while($row = $result->fetch_assoc()) {?>
         <br><a href="profile.php?name=<?php echo $row['user_id'] ?>"><?php echo $row['username']?></a>
-        <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        <br><a href = "post.php?name=<?php echo $row['id']?>">
+            <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        </a>
         <br><?php echo htmlspecialchars($row['caption']); ?>
         <form method = 'post'>
             <br><button type = 'submit' name ='1like' value = '<?php echo $row['id']?>' >1st like</button>
@@ -103,7 +105,9 @@ if(isset($_POST["3like"])) {
 <?php if ($notresult->num_rows > 0) {?>
     <?php while($row = $notresult->fetch_assoc()) {?>
         <br><a href="profile.php?name=<?php echo $row['user_id'] ?>"><?php echo $row['username']?></a>
-        <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        <br><a href = "post.php?name=<?php echo $row['id']?>">
+            <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        </a>
         <br><?php echo htmlspecialchars($row['caption']); ?>
         <form method = 'post'>
             <br><button type = 'submit' name ='1like' value = '<?php echo $row['id']?>' >1st like</button>
@@ -117,7 +121,9 @@ if(isset($_POST["3like"])) {
 <?php if ($resultp2->num_rows > 0) {?>
     <?php while($row = $resultp2->fetch_assoc()) {?>
         <br><a href="profile.php?name=<?php echo $row['user_id'] ?>"><?php echo $row['username']?></a>
-        <br><?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        <br><a href = "post.php?name=<?php echo $row['id']?>">
+            <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['img'] ).'"/>';?>
+        </a>
         <br><?php echo htmlspecialchars($row['caption']); ?>
         <form method = 'post'>
             <br><button type = 'submit' name ='1like' value = '<?php echo $row['id']?>' >1st like</button>
